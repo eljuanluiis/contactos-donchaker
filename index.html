@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#141114">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Proveedores">
+<title>Proveedores</title>
+<style>
+:root{--bg:#141114;--card:#1f1a1f;--line:#2f282f;--coral:#ff6f61;--coral-2:#ff8d80;--soft:rgba(255,111,97,.16);--text:#f6efee;--muted:#a99ea1;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:16px 16px 10px;border-bottom:1px solid var(--line)}
+.wrap{max-width:640px;margin:0 auto}
+h1{margin:0 0 12px;font-size:1.6rem;font-weight:700;letter-spacing:-.01em}
+.sb{position:relative}
+input{width:100%;padding:13px 40px 13px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--text);font:inherit}
+input::placeholder{color:var(--muted)}
+input:focus{outline:none;border-color:var(--coral)}
+#x{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:0;border-radius:50%;background:var(--soft);color:var(--coral);font-size:1.1rem;cursor:pointer;display:none}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font:inherit;font-size:.9rem;cursor:pointer}
+.chip.on{background:var(--coral);border-color:var(--coral);color:#201012;font-weight:600}
+main{padding:8px 16px 40px}
+#count{color:var(--muted);font-size:.9rem;margin:10px 0}
+.letter{color:var(--coral);font-weight:700;margin:18px 0 6px;font-size:1rem}
+.c{display:flex;gap:14px;padding:14px;margin-bottom:10px;background:var(--card);border:1px solid var(--line);border-radius:16px}
+.av{flex:none;width:46px;height:46px;border-radius:50%;background:var(--soft);color:var(--coral);display:grid;place-items:center;font-weight:700}
+.b{min-width:0;flex:1}
+.n{font-weight:600;font-size:1.05rem}
+.t{color:var(--muted);font-size:.92rem;margin-top:1px}
+.p{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 12px}
+.p span{padding:4px 10px;border-radius:999px;background:#2a232a;color:#d8cdd0;font-size:.85rem}
+.p span.m{background:var(--soft);color:var(--coral-2);font-weight:600}
+.a{display:flex;gap:8px}
+.a a{flex:1;text-align:center;padding:10px;border-radius:12px;text-decoration:none;font-weight:600;font-size:.95rem}
+.call{background:var(--coral);color:#201012}
+.wa{border:1.5px solid var(--coral);color:var(--coral)}
+.a a:focus-visible,.chip:focus-visible,#x:focus-visible{outline:2px solid var(--coral-2);outline-offset:2px}
+.empty{text-align:center;color:var(--muted);padding:48px 12px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>Proveedores</h1>
+<div class="sb"><input id="q" type="search" placeholder="Busca un producto o proveedor" autocomplete="off" aria-label="Buscar"><button id="x" aria-label="Borrar búsqueda">×</button></div>
+<div class="chips" id="chips"></div>
+</div></header>
+<main><div class="wrap"><div id="count"></div><div id="list"></div></div></main>
+<script>
+const D=[
+["Jonathan Disiogreca Viveres","+58 416-6952174",["Crema de leche Natulac"]],
+["Thais Comaca","+58 424-8746407",["Charcutería","Queso amarillo","Queso pasteurizado","Pecorino","Jamón de pierna","Pulpas para jugos (fresa, mora, parchita, guanábana)"]],
+["Juan Dist El Campo","+58 424-8598351",["Queso mozzarella para pizza","Pepperoni"]],
+["Nairymar NRJ","+58 424-8298998",["Charcutería","Chocolates Kron"]],
+["Luis Camilo Distramar","+58 424-8792614",["Charcutería","Queso Bocconcini"]],
+["Yanelys Wladidador","+58 412-3574594",["Especias","Gotas de chocolate"]],
+["Jesús El Cibao","+58 412-1969608",["Charcutería"]],
+["Rosangel Monte Adentro","+58 424-4883510",["Charcutería","Queso crema"]],
+["Rodolfo Polar Pepsi","+58 412-7958233",["Refrescos Pepsi","Alimentos Polar"]],
+["Yroshima Calmar","+58 424-8662278",["Toallines de mano","Papel higiénico industrial","Pitillos forrados","Envases de anime","Envases de plástico","Bolsas de basura"]],
+["Orlando Polar Joandretti Nuevo","+58 424-8844195",["Cervecería Polar"]],
+["Sandra Triple A","+58 416-6958552",["Guantes de nitrilo negro"]],
+["Hilda Oxford","+58 412-0968321",["Productos marca Kaldiki","Tomates pelados","Pasta de tomate","Maíz dulce","Palmitos","Crema de pistacho","Pimienta","Aceite de oliva","Toallitas húmedas"]],
+["Emilio Adica","+58 424-8475246",["Facilistas","Queso crema Gaby"]],
+["Daniela Emisan","+58 412-9809997",["Tocineta","Productos lácteos Purísima"]],
+["Luis Guerra Nube Azul","+58 416-6962003",["Vino blanco Rosario"]],
+["Wilfredo Leiros","+58 424-8130965",["Chucherías marca Savoy","Chocolates"]],
+["Jaldibeth Pirulin","+58 414-0788258",["Pirulín"]],
+["Dipalma Oficina","+58 412-3580208",["Helados para producción"]],
+["Maria NRJ Cuidado Personal","+58 412-2800719",["Aseo personal"]],
+["Maritza Global Food","+58 424-8525086",["Leches de almendras"]],
+["Yulma Cortez Panini","+58 414-1297289",["Rollos de máquina fiscal","Rollos de punto de venta"]],
+["Eduardo Bosque Alto","+58 414-7850511",["Miel"]],
+["Mariluz Regional","+58 414-7937682",["Chicles Extra"]],
+["Johana Sánchez Mundo Fish","+58 414-7888000",["Pescadería"]],
+["Angel Amanecer ITC","+58 414-8538269",["Productos Amanecer","Azúcar"]],
+["Nicolás El Cedro","+58 412-3586889",["Pan árabe"]],
+["Sr Camarones","+58 412-0963253",["Pescadería","Camarones","Pulpo"]],
+["Paramo Cafe","+58 424-2664920",["Café para la producción"]],
+["Freddy Papas Fritas","+58 416-6959999",["Papas congeladas"]],
+["Luis Lomito Pollo","+58 414-7882543",["Filet de pollo","Charcutería"]],
+["Manuel INP","+58 426-5870366",["Gestor del INPSASEL"]],
+["Martín Velásquez COMANDAS","+58 412-9016450",["Comandas para mesoneros"]],
+["Henry Buonpan","+58 414-5427656",["Pan rebanado","Pan de sándwich","Pan clubhouse"]],
+["Miguel Blanco Gaduca","+58 412-2990996",["Productos marca Doña Tita","Mayonesa"]],
+["José Daniel Millán Regional","+58 426-5865435",["Cervecería Zulia"]]
+].sort((a,b)=>a[0].localeCompare(b[0],"es"));
+const CH=["Charcutería","Queso","Pescadería","Cervecería","Pan","Chocolate","Envases","Café"];
+const norm=s=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const stem=w=>w.length>3&&w.endsWith("s")?w.slice(0,-1):w;
+const $=id=>document.getElementById(id);
+const q=$("q"),list=$("list"),count=$("count"),x=$("x"),chips=$("chips");
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function words(){return norm(q.value).split(/\s+/).filter(Boolean).map(stem)}
+function render(){
+  const w=words();x.style.display=q.value?"block":"none";
+  [...chips.children].forEach(c=>c.classList.toggle("on",norm(c.textContent)===norm(q.value.trim())));
+  const rows=D.filter(([n,t,p])=>{const h=norm(n+" "+p.join(" "));return w.every(k=>h.includes(k))});
+  count.textContent=w.length?rows.length+(rows.length==1?" proveedor encontrado":" proveedores encontrados"):D.length+" proveedores";
+  if(!rows.length){list.innerHTML='<div class="empty">No hay proveedores para esa búsqueda. Prueba con otra palabra, por ejemplo queso o charcutería.</div>';return}
+  let html="",last="";
+  rows.forEach(([n,t,p])=>{
+    const L=n[0].toUpperCase();
+    if(!w.length&&L!==last){html+='<div class="letter">'+L+"</div>";last=L}
+    const ini=n.split(" ").slice(0,2).map(s=>s[0]).join("").toUpperCase();
+    const num=t.replace(/\D/g,"");
+    const tags=p.map(s=>{const m=w.length&&w.some(k=>norm(s).includes(k));return "<span"+(m?' class="m"':"")+">"+esc(s)+"</span>"}).join("");
+    html+='<div class="c"><div class="av">'+esc(ini)+'</div><div class="b"><div class="n">'+esc(n)+'</div><div class="t">'+esc(t)+'</div><div class="p">'+tags+'</div><div class="a"><a class="call" href="tel:+'+num+'">Llamar</a><a class="wa" href="https://wa.me/'+num+'" target="_blank" rel="noopener">WhatsApp</a></div></div></div>';
+  });
+  list.innerHTML=html;
+}
+CH.forEach(c=>{const b=document.createElement("button");b.className="chip";b.textContent=c;b.onclick=()=>{q.value=norm(q.value.trim())===norm(c)?"":c;render()};chips.appendChild(b)});
+q.addEventListener("input",render);
+x.onclick=()=>{q.value="";render();q.focus()};
+render();
+if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
